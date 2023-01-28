@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
@@ -10,9 +9,11 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserInput } from './dto/update-user.input';
+import { ApiTags } from '@nestjs/swagger';
 import { ChangePasswordInput } from './dto/change-password.input';
 
 @Controller('users')
+@ApiTags('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -33,14 +34,10 @@ export class UsersController {
   ) {
     return this.usersService.update(id, updateUserDto);
   }
-  // @Patch('changepassword/:id')
-  // changePassword(
-  //   @Param('id', ParseIntPipe) id: string,
-  //   @Body() changePassword: ChangePasswordInput,
-  // ) {
-  //   return this.usersService.changePassword(id, changePassword);
-  // }
-
+  @Patch('changepassword/:id')
+  changePassword(@Body() changePassword: ChangePasswordInput) {
+    return this.usersService.changePassword(changePassword);
+  }
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);

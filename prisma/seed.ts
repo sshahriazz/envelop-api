@@ -30,8 +30,6 @@ async function main() {
       published: true,
     },
   });
-
-  console.log({ post1, post2 });
 }
 
 // execute the main function

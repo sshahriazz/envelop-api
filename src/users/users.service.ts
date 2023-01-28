@@ -1,10 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
+import { PasswordService } from 'src/auth/password.service';
+import { ChangePasswordInput } from './dto/change-password.input';
 import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private passwordService: PasswordService,
+  ) {}
   findAll() {
     return `This action returns all users`;
   }
@@ -19,33 +24,32 @@ export class UsersService {
       data: updateUserDto,
     });
   }
-  // async changePassword(
-  //   userId: string,
-  //   userPassword: string,
-  //   changePassword: ChangePasswordInput,
-  // ) {
-  //   const passwordValid = await this.passwordService.validatePassword(
-  //     changePassword.oldPassword,
-  //     userPassword,
-  //   );
+  async changePassword(changePassword: ChangePasswordInput) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: changePassword.id },
+    });
+    const passwordValid = await this.passwordService.validatePassword(
+      changePassword.oldPassword,
+      user.password,
+    );
 
-  //   if (!passwordValid) {
-  //     throw new BadRequestException('Invalid password');
-  //   }
+    if (!passwordValid) {
+      throw new BadRequestException('Invalid password');
+    }
 
-  //   const hashedPassword = await this.passwordService.hashPassword(
-  //     changePassword.newPassword,
-  //   );
+    const hashedPassword = await this.passwordService.hashPassword(
+      changePassword.newPassword,
+    );
 
-  //   return this.prisma.user.update({
-  //     data: {
-  //       password: hashedPassword,
-  //     },
-  //     where: { id: userId },
-  //   });
-  // }
+    return this.prisma.user.update({
+      data: {
+        password: hashedPassword,
+      },
+      where: { id: user.id },
+    });
+  }
 
-  remove(id: string) {
+  async remove(id: string) {
     return `This action removes a #${id} user`;
   }
 }
