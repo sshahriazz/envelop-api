@@ -48,26 +48,23 @@ export class ArticlesController {
   @ApiCreatedResponse({
     type: ArticleEntity,
   })
-  findOne(@Param('id', ParseIntPipe) id: string) {
-    return this.articlesService.findOne(+id);
+  findOne(@Param('id') id: string) {
+    return this.articlesService.findOne(id);
   }
 
   @Patch(':id')
   @ApiCreatedResponse({
     type: ArticleEntity,
   })
-  update(
-    @Param('id', ParseIntPipe) id: string,
-    @Body() updateArticleDto: UpdateArticleDto,
-  ) {
-    return this.articlesService.update(+id, updateArticleDto);
+  update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto) {
+    return this.articlesService.update(id, updateArticleDto);
   }
 
   @Delete(':id')
   @ApiCreatedResponse({
     type: ArticleEntity,
   })
-  remove(@Param('id', ParseIntPipe) id: string) {
-    return this.articlesService.remove(+id);
+  remove(@Param('id') id: string) {
+    return this.articlesService.remove(id);
   }
 }
