@@ -34,7 +34,23 @@ This api project is built for professionals using [Nest](https://github.com/nest
 $ npm install
 ```
 
+## DB Setup
+
+First `cp .env.example .env` then,
+Change below url according to your connection string in .env
+`DATABASE_URL="postgresql://polash:polash@localhost:5432/envelop?schema=public"`
+
 ## Running the app
+
+```bash
+# Preparation for initializing the database
+
+$ npx prisma migrate dev
+$ npx prisma generate
+$ npx prisma generate
+
+# this steps are mandatory
+```
 
 ```bash
 # development
