@@ -1,3 +1,20 @@
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER', 'BLOGGER', 'GUEST');
+
+-- CreateTable
+CREATE TABLE "Article" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT,
+    "body" TEXT NOT NULL,
+    "published" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "authorId" TEXT,
+
+    CONSTRAINT "Article_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateTable
 CREATE TABLE "Comment" (
     "id" TEXT NOT NULL,
@@ -7,6 +24,20 @@ CREATE TABLE "Comment" (
     "articleId" TEXT,
 
     CONSTRAINT "Comment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "firstname" TEXT,
+    "lastname" TEXT,
+    "role" "Role"[] DEFAULT ARRAY['USER']::"Role"[],
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -39,6 +70,12 @@ CREATE TABLE "_Comments" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Article_title_key" ON "Article"("title");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Tag_name_key" ON "Tag"("name");
 
 -- CreateIndex
@@ -52,6 +89,9 @@ CREATE UNIQUE INDEX "_Comments_AB_unique" ON "_Comments"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_Comments_B_index" ON "_Comments"("B");
+
+-- AddForeignKey
+ALTER TABLE "Article" ADD CONSTRAINT "Article_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_articleId_fkey" FOREIGN KEY ("articleId") REFERENCES "Article"("id") ON DELETE SET NULL ON UPDATE CASCADE;

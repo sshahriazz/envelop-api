@@ -6,7 +6,7 @@ import { AppService } from './app.service';
 import { ArticlesModule } from './articles/articles.module';
 // import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './auth/users/users.module';
+import { UsersModule } from './users/users.module';
 import config from './common/configs/config';
 
 @Module({

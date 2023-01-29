@@ -1,5 +1,5 @@
 import { PrismaService } from 'nestjs-prisma';
-import { Prisma, User } from '@prisma/client';
+import { Prisma, Role, User } from '@prisma/client';
 import {
   Injectable,
   NotFoundException,
@@ -18,7 +18,7 @@ import { UserEntity } from './entities/user.entity';
 type JWTPayload = {
   userId: string;
   email: string;
-  role: string;
+  role: Role[];
   firstname: string;
   lastname: string;
 };

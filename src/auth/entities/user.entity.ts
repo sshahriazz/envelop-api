@@ -12,5 +12,5 @@ export class UserEntity {
   lastname: string;
 
   @ApiProperty()
-  role: Role;
+  role: Role[];
 }
