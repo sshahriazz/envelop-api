@@ -6,8 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { Role } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { RoleGuard } from 'src/auth/role/role.guard';
+import { Roles } from 'src/auth/roles/roles.decorator';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
@@ -25,45 +30,49 @@ export class ArticlesController {
   create(@Body() createArticleDto: CreateArticleDto) {
     return this.articlesService.create(createArticleDto);
   }
-
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Get()
   @ApiCreatedResponse({
     type: ArticleEntity,
     isArray: true,
   })
-  findAll() {
-    return this.articlesService.findAll();
+  async findAll(): Promise<ArticleEntity[]> {
+    return await this.articlesService.findAll();
   }
   @Get('drafts')
   @ApiCreatedResponse({
     type: ArticleEntity,
     isArray: true,
   })
-  findDrafts() {
-    return this.articlesService.findDrafts();
+  async findDrafts(): Promise<ArticleEntity[]> {
+    return await this.articlesService.findDrafts();
   }
 
   @Get(':id')
   @ApiCreatedResponse({
     type: ArticleEntity,
   })
-  findOne(@Param('id') id: string) {
-    return this.articlesService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<ArticleEntity> {
+    return await this.articlesService.findOne(id);
   }
 
   @Patch(':id')
   @ApiCreatedResponse({
     type: ArticleEntity,
   })
-  update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto) {
-    return this.articlesService.update(id, updateArticleDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateArticleDto: UpdateArticleDto,
+  ): Promise<ArticleEntity> {
+    return await this.articlesService.update(id, updateArticleDto);
   }
 
   @Delete(':id')
   @ApiCreatedResponse({
     type: ArticleEntity,
   })
-  remove(@Param('id') id: string) {
-    return this.articlesService.remove(id);
+  async remove(@Param('id') id: string): Promise<ArticleEntity> {
+    return await this.articlesService.remove(id);
   }
 }
