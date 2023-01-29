@@ -13,28 +13,53 @@ datasource db {
 // prisma/schema.prisma
 
 model Article {
-  id          String   @id @default(cuid())
-  title       String   @unique
+  id          String    @id @default(cuid())
+  title       String    @unique
   description String?
   body        String
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  author      User?    @relation(fields: [authorId], references: [id])
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  author      User?     @relation(fields: [authorId], references: [id])
   authorId    String?
   tags        Tag[]
+  comments    Comment[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  body      String
+
+  comment Comment[] @relation("Comments")
+  reply  Comment[] @relation("Comments")
+
+  article   Article? @relation(fields: [articleId], references: [id])
+  articleId String?
 }
 
 model User {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  email     String    @unique
-  password  String
-  firstname String?
-  lastname  String?
-  articles  Article[]
-  role      Role      @default(USER)
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  email      String    @unique
+  password   String
+  firstname  String?
+  lastname   String?
+  articles   Article[]
+  role       Role      @default(USER)
+  followedBy Follows[] @relation("following")
+  following  Follows[] @relation("follower")
+}
+
+model Follows {
+  follower    User   @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User   @relation("following", fields: [followingId], references: [id])
+  followingId String
+
+  @@id([followerId, followingId])
 }
 
 model Tag {
