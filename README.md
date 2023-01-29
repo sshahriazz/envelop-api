@@ -47,9 +47,13 @@ Learn More: [Prisma Postgres](https://www.prisma.io/docs/concepts/database-conne
 ```bash
 # Preparation for initializing the database
 
-$ npx prisma migrate dev
-$ npx prisma generate
-$ npx prisma db push
+$ npm run db:migrate
+$ yarn db:migrate
+
+$ npm run db:client
+$ yarn db:client
+
+# after changing schema run these both command simultaneously.
 
 # this steps are mandatory
 ```
