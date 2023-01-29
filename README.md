@@ -49,7 +49,7 @@ Learn More: [Prisma Postgres](https://www.prisma.io/docs/concepts/database-conne
 
 $ npx prisma migrate dev
 $ npx prisma generate
-$ npx prisma generate
+$ npx prisma db push
 
 # this steps are mandatory
 ```
