@@ -40,6 +40,8 @@ First `cp .env.example .env` then,
 Change below url according to your connection string in .env
 `DATABASE_URL="postgresql://polash:polash@localhost:5432/envelop?schema=public"`
 
+Learn More: [Prisma Postgres](https://www.prisma.io/docs/concepts/database-connectors/postgresql)
+
 ## Running the app
 
 ```bash
@@ -66,6 +68,8 @@ $ npm run start:prod
 $ yarn start:prod
 ```
 
+Visit: `http://localhost:3000/api` for swagger docs
+
 ## Stay in touch
 
 - Author - [Sharieaz Kavier](https://github.com/sshahriazz)
@@ -75,3 +79,7 @@ $ yarn start:prod
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## Issues
+
+Please report any issues you face on Github issues, I will be glad to fix that.
