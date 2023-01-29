@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -27,8 +28,22 @@ export class CreateArticleDto {
   @ApiProperty()
   body: string;
 
-  @IsBoolean()
+  @ApiProperty({
+    type: 'file',
+    properties: {
+      file: {
+        type: 'string',
+        format: 'binary',
+      },
+    },
+  })
   @IsOptional()
-  @ApiProperty({ required: false, default: false })
+  cover: any;
+  @IsOptional()
+  @Transform(({ value }) => {
+    return value === 'true' || value === true || value === 1 || value === '1';
+  })
+  @IsBoolean()
+  @ApiProperty({ required: false, type: Boolean, default: false })
   published?: boolean = false;
 }

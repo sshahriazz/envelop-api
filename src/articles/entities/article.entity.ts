@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Article } from '@prisma/client';
+import { Exclude } from 'class-transformer';
 
 export class ArticleEntity implements Article {
   @ApiProperty()
@@ -18,4 +19,7 @@ export class ArticleEntity implements Article {
   createdAt: Date;
   @ApiProperty()
   updatedAt: Date;
+  @ApiProperty()
+  @Exclude()
+  cover: string;
 }

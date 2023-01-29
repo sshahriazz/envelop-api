@@ -7,8 +7,22 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
+  ParseFilePipeBuilder,
+  HttpStatus,
 } from '@nestjs/common';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { RoleGuard } from 'src/auth/role/role.guard';
@@ -18,6 +32,7 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleEntity } from './entities/article.entity';
 
+@ApiBearerAuth()
 @Controller('articles')
 @ApiTags('articles')
 export class ArticlesController {
@@ -27,10 +42,27 @@ export class ArticlesController {
   @ApiCreatedResponse({
     type: ArticleEntity,
   })
-  create(@Body() createArticleDto: CreateArticleDto) {
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('cover'))
+  create(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: 'jpeg',
+        })
+        .addMaxSizeValidator({
+          maxSize: 650000,
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    cover: Express.Multer.File,
+    @Body() createArticleDto: CreateArticleDto,
+  ) {
     return this.articlesService.create(createArticleDto);
   }
-  @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Get()
   @ApiCreatedResponse({

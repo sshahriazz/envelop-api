@@ -9,9 +9,10 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserInput } from './dto/update-user.input';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ChangePasswordInput } from './dto/change-password.input';
 
+@ApiBearerAuth()
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
@@ -38,6 +39,7 @@ export class UsersController {
   changePassword(@Body() changePassword: ChangePasswordInput) {
     return this.usersService.changePassword(changePassword);
   }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);

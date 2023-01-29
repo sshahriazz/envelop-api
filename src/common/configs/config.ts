@@ -14,8 +14,13 @@ const config: Config = {
     version: '1.5',
     path: 'api',
   },
+  session: {
+    resave: false,
+    saveUninitialized: false,
+    secret: 'my-secret',
+  },
   security: {
-    expiresIn: '2m',
+    expiresIn: '200m',
     refreshIn: '7d',
     bcryptSaltOrRound: 10,
   },

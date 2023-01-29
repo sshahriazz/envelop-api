@@ -3,10 +3,17 @@ export interface Config {
   cors: CorsConfig;
   swagger: SwaggerConfig;
   security: SecurityConfig;
+  session: SessionConfig;
 }
 
 export interface NestConfig {
   port: number;
+}
+
+export interface SessionConfig {
+  secret: string;
+  resave: boolean;
+  saveUninitialized: boolean;
 }
 
 export interface CorsConfig {

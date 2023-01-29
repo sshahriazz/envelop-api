@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
 export class RoleGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
-  matchesRoles(roles: string[], userRole: string): boolean {
-    return roles.some((role) => role === userRole);
+  matchesRoles(roles: string[], userRole: [string]): boolean {
+    return JSON.stringify(roles) === JSON.stringify(userRole);
   }
   canActivate(
     context: ExecutionContext,
